@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inherit the Form View to Customize State Labels -->
+    <record id="custom_view_program_membership_form_inherit" model="ir.ui.view">
+        <field name="name">custom.view.program.membership.form.inherit</field>
+        <field name="model">g2p.program_membership</field>
+        <field name="inherit_id" ref="g2p_programs.view_program_membership_form"/>
+        <field name="arch" type="xml">
+            <!-- Modify the statusbar widget to change the state labels -->
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,officer_assigned,visit_office,awaiting_site_visit,preparing_funds,enrolled,rejected" />
+            </xpath>
+
+            <!-- Change the Enroll Button to Approve -->
+            <xpath expr="//button[@name='enroll_eligible_registrants']" position="attributes">
+                <attribute name="string">Approve</attribute>
+                <attribute name="invisible">state != 'preparing_funds'</attribute>
+            </xpath>
+            <!-- Hide 'Verify Eligibility' button -->
+            <xpath expr="//button[@name='verify_eligibility']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide 'Deduplicate' button -->
+            <xpath expr="//button[@name='deduplicate_beneficiaries']" position="attributes">
+                <attribute name="invisible">1</attribute>
+	    </xpath>
+
+	    <!-- Change the label of Registrant ID to Beneficiary ID -->
+            <xpath expr="//field[@name='registrant_id']" position="attributes">
+                <attribute name="string">Beneficiary ID</attribute>
+	    </xpath>
+
+	    <!-- hide entitlement there -->
+            <xpath expr="//page[@name='entitlement']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- hide groups column (not required for now) -->
+            <xpath expr="//page[@name='individual_groups']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- hiding relationship status (not required) -->
+            <xpath expr="//page[@name='relationships']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Individual Program Membership In kind-entitlements -->
+            <!-- added in-kind there -->
+            <xpath expr="//page[@name='entitlement']" position="after">
+                <page name="inkind_entitlement" string="In-kind Entitlements">
+                    <field name="inkind_entitlement_ids" readonly="1" nolabel="1">
+                      <tree>
+                          <button
+                                name="open_entitlement_form"
+                                type="object"
+                                icon="fa-external-link"
+                                title="Open Form"
+                                class="btn-success"
+                            />
+                          <field name="name" />
+                          <field name="code" />
+                          <field name="cycle_id" />
+                          <field name="valid_from" />
+                          <field name="valid_until" />
+                          <field name="state" />
+		     <!-- <field name="company_id" groups="base.group_multi_company" /> -->
+                      </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <!-- for changing of ribbon status to applied -->
+            
+            <xpath expr="//header/button" position="after">
+                <button
+                        name="assign_to_officer"
+                        type="object"
+                        string="Assign Officer"
+                        title="Assign Officer"
+                        class="btn-primary"
+                        invisible="state not in ('draft')"
+                    />
+                <button
+                        name="pending_office_visit"
+                        type="object"
+                        string="Visit Office"
+                        title="Visit Office Location"
+                        class="btn-primary"
+                        invisible="state not in ('officer_assigned')"
+                    />
+                <button
+                        name="pending_site_visit"
+                        type="object"
+                        string="Site Visit"
+                        title="Awaiting Site Visit"
+                        class="btn-primary"
+                        invisible="state not in ('officer_assigned','visit_office')"
+                    />
+                <button
+                        name="prepare_funds"
+                        type="object"
+                        string="Prepare Funds"
+                        title="Prepare Funds"
+                        class="btn-primary"
+                        invisible="state not in ('officer_assigned','visit_office','awaiting_site_visit')"
+                    />
+                <button
+                        name="create_manual_inkind_entitlement"
+                        type="object"
+                        string="Create Entitlement"
+                        title="Create Entitlement"
+                        class="btn-primary"
+                        invisible="state not in ('preparing_funds')"
+                    />
+            </xpath>
+
+
+
+
+            <!-- <xpath expr="//widget[@name='web_ribbon']" position="replace"/> -->
+            <xpath expr="//sheet/widget" position="replace">
+                <widget
+                        name="web_ribbon"
+                        title="APPLICATION RCVD."
+                        bg_color="bg-primary"
+                        invisible="state != 'draft'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="OFFICER ASSIGNED"
+                        bg_color="bg-info"
+                        invisible="state != 'officer_assigned'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="VISIT OFFICE LOC."
+                        bg_color="bg-info"
+                        invisible="state != 'visit_office'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="AWAITING SITE VISIT"
+                        bg_color="bg-info"
+                        invisible="state != 'awaiting_site_visit'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="PREPARING FUNDS"
+                        bg_color="bg-info"
+                        invisible="state != 'preparing_funds'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="APPROVED"
+                        bg_color="bg-success"
+                        invisible="state != 'enrolled'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="REJECTED"
+                        bg_color="bg-danger"
+                        invisible="state != 'rejected'"
+                    />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="custom_view_program_membership_assessment_form" model="ir.ui.view">
+                <field name="name">custom_view_program_membership_assessment_form</field>
+                <field name="model">g2p.program_membership</field>
+                <field name="inherit_id" ref="g2p_program_assessment.view_program_membership_assessment_form" />
+                <field name="arch" type="xml">
+                <xpath expr="//button[@name='prepare_assessment']" position="attributes">
+                <attribute name="string">Assessment</attribute>
+                </xpath>
+        </field>
+    </record>
+
+    <record id="custom_view_program_membership_reg_info_form" model="ir.ui.view">
+                <field name="name">custom_view_program_membership_reg_info_form</field>
+                <field name="model">g2p.program_membership</field>
+                <field name="inherit_id" ref="g2p_program_registrant_info.view_program_membership_reg_info_form" />
+                <field name="arch" type="xml">
+                <xpath expr="//button[@name='create_program_registrant_info']" position="attributes">
+                <attribute name="invisible">state in ('rejected',) or latest_registrant_info_status in ('active', 'inprogress')</attribute>
+                </xpath>
+        </field>
+    </record>
+
+    <!-- application info button hide  -->
+    <record id="view_program_membership_reg_info_form" model="ir.ui.view">
+        <field name="name">view_program_membership_reg_info_form</field>
+        <field name="model">g2p.program_membership</field>
+        <field name="inherit_id" ref="g2p_programs.view_program_membership_form" />
+        <field name="priority">920</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='open_new_tab']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_program_registrant_membership_form_inherited" model="ir.ui.view">
+    <field name="name">view_program_registrant_membership_form_inherited</field>
+    <field name="model">g2p.program_membership</field>
+    <field name="inherit_id" ref="g2p_program_registrant_info.view_program_membership_reg_info_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='program_registrant_info_ids']/tree" position="inside">
+            <button
+                name="%(action_print_registrant_info)d"
+                type="action"
+                icon="fa-print"
+                string="Print Registrant Info"
+                class="btn-success"
+            />
+        </xpath>
+    </field>
+    </record>
+
+
+    <record id="custom_view_program_list_form" model="ir.ui.view">
+                <field name="name">custom_view_program_list_form</field>
+                <field name="model">g2p.program</field>
+                <field name="inherit_id" ref="g2p_programs.view_program_list_form" />
+                <field name="arch" type="xml">
+                <xpath expr="//button[@name='enroll_eligible_registrants']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='verify_eligibility']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='deduplicate_beneficiaries']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the Tree View to Customize State Labels -->
+    <record id="custom_view_program_membership_tree_inherit" model="ir.ui.view">
+        <field name="name">custom.view.program.membership.tree.inherit</field>
+        <field name="model">g2p.program_membership</field>
+        <field name="inherit_id" ref="g2p_programs.view_program_membership_tree"/>
+        <field name="arch" type="xml">
+            <!-- Modify the badge widget to change the state labels -->
+            <field name="state" position="attributes">
+                <attribute name="selection">
+                    [
+            ('draft', 'Application Received'),
+            ('officer_assigned', 'Officer Assigned'),
+            ('visit_office', 'Visit Office'),
+            ('awaiting_site_visit', 'Awaiting Site Visit'),
+            ('preparing_funds', 'Preparing Funds'),
+            ('enrolled', 'Approved'),
+            ('rejected', 'Rejected'),
+        ],
+                </attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

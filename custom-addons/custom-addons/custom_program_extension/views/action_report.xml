@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Define custom paper format for the report -->
+    <record id="paperformat_registrant_info_a4" model="report.paperformat">
+        <field name="name">Registrant Info A4</field>
+        <field name="default" eval="False" />
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">4.5</field>
+        <field name="margin_bottom">4.5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Action for printing the report -->
+    <record id="action_print_registrant_info" model="ir.actions.report">
+        <field name="name">Print Registrant Info</field>
+        <field name="model">g2p.program.registrant_info</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_program_extension.print_registrant_info</field>
+        <field name="report_file">custom_program_extension.print_registrant_info</field>
+        <field name="print_report_name">'Beneficiary_ID_%s' % (object.registrant_id.id)</field>
+        <field name="binding_model_id" ref="g2p_program_registrant_info.model_g2p_program_registrant_info" />
+        <field name="paperformat_id" ref="paperformat_registrant_info_a4" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Template for the PDF report -->
+    <template id="print_registrant_info">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <!-- styling -->
+                <style>
+                    h2 {
+                        text-align: center;
+                        color: #285385;
+                        font-weight: bold;
+                        margin-bottom: 20px;
+                    }
+                    .table {
+                        margin-top: 20px;
+                        margin-bottom: 30px;
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    .table th, .table td {
+                        padding: 15px;
+                        text-align: left;
+                        vertical-align: middle;
+                        border: 1px solid #ddd;
+                        text-transform: capitalize;
+                    }
+                    .table th {
+                        width: 30%;
+                        background-color: #f2f2f2;
+                    }
+                    .table td {
+                        width: 70%;
+                    }
+                    .table tr:nth-child(odd){
+                        background-color: #f2f2f2;
+                    }
+                    .table td, .table th {
+                        min-height: 30px;
+                    }
+                    .email-cell {
+                        text-transform: none !important;
+                    }
+                </style>
+
+                <h2>Beneficiary Application</h2>
+
+                <!-- Outer table for main categories -->
+                <table class="table table-sm">
+                    <tbody>
+                    <t t-foreach="docs" t-as="doc">
+                        <tr>
+                                <th>e-ID</th>
+                                <td>
+                                    <t t-set="test_id" t-value="doc.registrant_id.reg_ids.filtered(lambda x: x.id_type.name == 'e-ID')"/>
+                                    <t t-out="test_id[0].value"/>
+                                </td>
+                        </tr>
+                        <tr>
+                                <th>Program Name</th>
+                                <td>
+                                <t t-esc="doc.program_id.name"/>
+                                </td>
+                        </tr>
+                        <tr>
+                                <th>Application ID</th>
+                                <td>
+                                <t t-esc="doc.application_id"/>
+                                </td>
+                        </tr>
+                        <t t-foreach="doc.program_registrant_info.items()" t-as="outer">
+
+                            <!-- Inner table for each sub-category -->
+                            <t t-if="isinstance(outer[1], dict) and outer[1]">
+                                <tr>
+                                <strong>
+                                <th colspan="2" style="text-align: center;">
+                                        <t t-esc="outer[0]">  
+                                        </t>
+                                </th>
+                                </strong>
+                                </tr>
+                                <t t-foreach="outer[1].items()" t-as="inner">
+                                    <t t-if="inner[1]">
+                                    <tr>
+                                        <th>
+                                        <t t-esc="inner[0]"> 
+                                        </t>
+                                        </th>
+                                        <td>
+                                        <t t-esc="inner[1]">
+                                        </t>
+                                        </td>
+                                    </tr>
+                                    </t>
+                                </t>
+                            </t>
+                            <t t-if="not isinstance(outer[1], dict)">
+                                <tr>
+                                    <th>Value</th>
+                                    <td><t t-esc="outer[1]"/></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

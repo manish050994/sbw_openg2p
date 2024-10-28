@@ -1,0 +1,27 @@
+/* Initial button style */
+.g2p_login .oe_login_buttons .btn-primary {
+    background-color: #285385 !important;
+    border-color: #285385 !important;
+}
+
+/* Button hover style */
+.g2p_login .oe_login_buttons .btn-primary:hover {
+    border-color: #285385;
+    background: #285385 0% 0% no-repeat padding-box;
+}
+
+.g2p_login .oe_login_buttons a,
+.g2p_login .oe_login_buttons a:hover {
+    color: #000000 !important;
+}
+
+.g2p_login .form-control:focus {
+    /* Change the opacity to adjust the brightness */
+    box-shadow: 0 0 0 0.1rem #000000 !important;
+}
+
+// reset button
+.g2p_login .reset-password,
+.g2p_login .reset-password a {
+    color: #000000 !important;
+}
