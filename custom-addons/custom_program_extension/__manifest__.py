@@ -12,6 +12,8 @@
     'data': [
         'security/ir.model.access.csv',
         'views/action_report.xml',
+        'data/g2p_visit_office_reasons.xml',
+        'wizard/visit_office_wizard.xml',
         'views/program_membership_view.xml',
         'wizard/create_manual_entitlement_inkind_wizard.xml',
         # List any XML files containing views, actions, or security rules if needed.

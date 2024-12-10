@@ -14,7 +14,7 @@
             <!-- Change the Enroll Button to Approve -->
             <xpath expr="//button[@name='enroll_eligible_registrants']" position="attributes">
                 <attribute name="string">Approve</attribute>
-                <attribute name="invisible">state != 'preparing_funds'</attribute>
+                <attribute name="invisible">0</attribute>
             </xpath>
             <!-- Hide 'Verify Eligibility' button -->
             <xpath expr="//button[@name='verify_eligibility']" position="attributes">
@@ -24,14 +24,14 @@
             <!-- Hide 'Deduplicate' button -->
             <xpath expr="//button[@name='deduplicate_beneficiaries']" position="attributes">
                 <attribute name="invisible">1</attribute>
-	    </xpath>
+            </xpath>
 
-	    <!-- Change the label of Registrant ID to Beneficiary ID -->
+            <!-- Change the label of Registrant ID to Beneficiary ID -->
             <xpath expr="//field[@name='registrant_id']" position="attributes">
                 <attribute name="string">Beneficiary ID</attribute>
-	    </xpath>
+            </xpath>
 
-	    <!-- hide entitlement there -->
+            <!-- hide entitlement there -->
             <xpath expr="//page[@name='entitlement']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -45,6 +45,12 @@
             <xpath expr="//page[@name='relationships']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+
+            <!-- Add Visit Office Reasons field below Beneficiary ID -->
+                <xpath expr="//field[@name='registrant_id']" position="after">
+                    <field name="visit_office_reason_ids" widget="many2many_tags" string="Visit Office Reasons" readonly="1" />
+                </xpath>
+
 
             <!-- Individual Program Membership In kind-entitlements -->
             <!-- added in-kind there -->
@@ -65,14 +71,14 @@
                           <field name="valid_from" />
                           <field name="valid_until" />
                           <field name="state" />
-		     <!-- <field name="company_id" groups="base.group_multi_company" /> -->
+                     <!-- <field name="company_id" groups="base.group_multi_company" /> -->
                       </tree>
                     </field>
                 </page>
             </xpath>
 
             <!-- for changing of ribbon status to applied -->
-            
+
             <xpath expr="//header/button" position="after">
                 <button
                         name="assign_to_officer"
@@ -80,40 +86,41 @@
                         string="Assign Officer"
                         title="Assign Officer"
                         class="btn-primary"
-                        invisible="state not in ('draft')"
-                    />
-                <button
-                        name="pending_office_visit"
-                        type="object"
-                        string="Visit Office"
-                        title="Visit Office Location"
-                        class="btn-primary"
-                        invisible="state not in ('officer_assigned')"
-                    />
+                                          /> 
+ <!-- invisible="state not in ('draft')" -->
+
+                <!-- Modify the Visit Office button to call the wizard -->
+                <xpath expr="//button[@name='pending_office_visit']" position="replace">
+                    <button name="%(action_visit_office_wizard)d" 
+                            type="action" 
+                            string="Visit Office" 
+                            class="btn-primary" />
+                </xpath>
+                        <!-- invisible="state not in ('officer_assigned')" -->
                 <button
                         name="pending_site_visit"
                         type="object"
                         string="Site Visit"
                         title="Awaiting Site Visit"
                         class="btn-primary"
-                        invisible="state not in ('officer_assigned','visit_office')"
                     />
-                <button
+                        <!-- invisible="state not in ('officer_assigned','visit_office')" -->
+                <!-- <button
                         name="prepare_funds"
                         type="object"
                         string="Prepare Funds"
                         title="Prepare Funds"
                         class="btn-primary"
-                        invisible="state not in ('officer_assigned','visit_office','awaiting_site_visit')"
-                    />
+                    /> -->
+                        <!-- invisible="state not in ('officer_assigned','visit_office','awaiting_site_visit')" -->
                 <button
                         name="create_manual_inkind_entitlement"
                         type="object"
                         string="Create Entitlement"
                         title="Create Entitlement"
                         class="btn-primary"
-                        invisible="state not in ('preparing_funds')"
                     />
+                        <!-- invisible="state not in ('preparing_funds')" -->
             </xpath>
 
 
@@ -145,12 +152,12 @@
                         bg_color="bg-info"
                         invisible="state != 'awaiting_site_visit'"
                     />
-                    <widget
+                    <!-- <widget
                         name="web_ribbon"
                         title="PREPARING FUNDS"
                         bg_color="bg-info"
                         invisible="state != 'preparing_funds'"
-                    />
+                    /> -->
                     <widget
                         name="web_ribbon"
                         title="APPROVED"
@@ -173,7 +180,8 @@
                 <field name="inherit_id" ref="g2p_program_assessment.view_program_membership_assessment_form" />
                 <field name="arch" type="xml">
                 <xpath expr="//button[@name='prepare_assessment']" position="attributes">
-                <attribute name="string">Assessment</attribute>
+                <attribute name="string">Comment</attribute>
+                <attribute name="class">no-bg-button</attribute>
                 </xpath>
         </field>
     </record>
@@ -203,20 +211,20 @@
     </record>
 
     <record id="view_program_registrant_membership_form_inherited" model="ir.ui.view">
-    <field name="name">view_program_registrant_membership_form_inherited</field>
-    <field name="model">g2p.program_membership</field>
-    <field name="inherit_id" ref="g2p_program_registrant_info.view_program_membership_reg_info_form" />
-    <field name="arch" type="xml">
-        <xpath expr="//field[@name='program_registrant_info_ids']/tree" position="inside">
-            <button
-                name="%(action_print_registrant_info)d"
-                type="action"
-                icon="fa-print"
-                string="Print Registrant Info"
-                class="btn-success"
-            />
-        </xpath>
-    </field>
+        <field name="name">view_program_registrant_membership_form_inherited</field>
+        <field name="model">g2p.program_membership</field>
+        <field name="inherit_id" ref="g2p_program_registrant_info.view_program_membership_reg_info_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='program_registrant_info_ids']/tree" position="inside">
+                <button
+                    name="%(action_print_registrant_info)d"
+                    type="action"
+                    icon="fa-print"
+                    string="Print Registrant Info"
+                    class="btn-success"
+                />
+            </xpath>
+        </field>
     </record>
 
 
@@ -234,9 +242,35 @@
                 <xpath expr="//button[@name='deduplicate_beneficiaries']" position="attributes">
                 <attribute name="invisible">1</attribute>
                 </xpath>
+
+                <xpath expr="//button[@name='action_view_related_queue_jobs']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                </xpath>
+
+
         </field>
     </record>
 
+    <record id="custom_view_invoice_tree" model="ir.ui.view">
+                <field name="name">custom_invoice</field>
+                <field name="model">g2p.program</field>
+                <field name="inherit_id" ref="g2p_programs.view_program_list_form" />
+                <field name="arch" type="xml">
+                    <xpath expr="//button[@name='open_eligible_beneficiaries_form']" position="after">
+                        <button
+                            type="object"
+                            class="oe_stat_button"
+                            name="transaction_details"
+                            icon="fa-file"
+                            title="Invoice"
+                            string="Invoices">
+                        </button>
+                    </xpath>
+
+
+                </field>
+    </record>
+    
     <!-- Inherit the Tree View to Customize State Labels -->
     <record id="custom_view_program_membership_tree_inherit" model="ir.ui.view">
         <field name="name">custom.view.program.membership.tree.inherit</field>
@@ -247,16 +281,17 @@
             <field name="state" position="attributes">
                 <attribute name="selection">
                     [
-            ('draft', 'Application Received'),
-            ('officer_assigned', 'Officer Assigned'),
-            ('visit_office', 'Visit Office'),
-            ('awaiting_site_visit', 'Awaiting Site Visit'),
-            ('preparing_funds', 'Preparing Funds'),
-            ('enrolled', 'Approved'),
-            ('rejected', 'Rejected'),
-        ],
+                        ('draft', 'Application Received'),
+                        ('officer_assigned', 'Officer Assigned'),
+                        ('visit_office', 'Visit Office'),
+                        ('awaiting_site_visit', 'Awaiting Site Visit'),
+                        ('enrolled', 'Approved'),
+                        ('rejected', 'Rejected'),
+                    ],
+                        <!-- ('preparing_funds', 'Preparing Funds'), -->
                 </attribute>
             </field>
         </field>
     </record>
 </odoo>
+

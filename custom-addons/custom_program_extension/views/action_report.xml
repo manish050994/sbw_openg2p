@@ -115,8 +115,14 @@
                                         </t>
                                         </th>
                                         <td>
-                                        <t t-esc="inner[1]">
-                                        </t>
+                                            <t t-if="outer[0] == 'documentUpload'">
+                                                <a t-att-href="'http://sbwdev.gov.tt/vendor/api/documents/view/%s' % inner[1]">
+                                                    http://sbwdev.gov.tt/vendor/api/documents/view/<t t-esc="inner[1]"/>
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="inner[1]"/>
+                                            </t>
                                         </td>
                                     </tr>
                                     </t>
@@ -135,4 +141,55 @@
             </div>
         </t>
     </template>
+
+    <!-- custom invoice actions below -->
+
+    <record id="action_open_invoices" model="ir.actions.act_window">
+        <field name="name">Invoices</field>
+        <field name="res_model">invoice.model</field>
+        <field name="view_mode">tree</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="view_invoice_tree" model="ir.ui.view">
+        <field name="name">g2p.program_membership.tree</field>
+        <field name="model">invoice.model</field>
+        <field name="arch" type="xml">
+            <tree string="Invoices" create="false">
+                <field name="transaction_id" string="Transaction ID"/>
+                <field name="business_name" string="Business Name"/>
+                <field name="vendor_id" string="Vendor SBW ID"/>
+                <field name="vendor_eid" string="Vendor's e-ID"/>
+                <field name="beneficiary_eid" string="Beneficiary eID"/>
+                <field name="item_category" string="Item Category"/>
+                <field name="price" string="Price"/>
+                <field name="status" string="Status"/>
+                <field name="redemption_status" string="Redemption Status" widget="badge" />
+                
+                <!-- Button to view Receipt Image -->
+                <button name="action_view_doc_image" 
+                        type="object" 
+                        string="Receipt Image" 
+                        icon="fa-file-image-o"
+                        class="oe_highlight"/>
+
+                <!-- Button to view Item Image -->
+                <button name="action_view_item_image" 
+                        type="object" 
+                        string="Item Image" 
+                        icon="fa-file-image-o"
+                        class="oe_highlight"/>
+
+                <!-- Button to view Invoice -->
+                <button name="action_view_invoice" 
+                        type="object" 
+                        string="View Invoice" 
+                        icon="fa-file-image-o"
+                        class="oe_highlight"/>
+
+            </tree>
+        </field>
+    </record>
+
+
 </odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="reason_incomplete_application" model="g2p.visit.office.reason">
+        <field name="name">Incomplete application - Additional documents required</field>
+    </record>
+    <record id="reason_officer_interview_required" model="g2p.visit.office.reason">
+        <field name="name">Officer interview required</field>
+    </record>
+    <record id="reason_collection_of_letter" model="g2p.visit.office.reason">
+        <field name="name">Collection of letter</field>
+    </record>
+</odoo>

@@ -5,3 +5,9 @@ g2p_manual_entitlement_inkind_wizard_validator,Manual Entitlement In-Kind Wizard
 g2p_manual_entitlement_inkind_item_wizard_admin,Manual Entitlement In-Kind Item Wizard Admin Access,model_g2p_manual_entitlement_inkind_item_wizard,g2p_registry_base.group_g2p_admin,1,1,1,1
 g2p_manual_entitlement_inkind_item_wizard_manager,Manual Entitlement In-Kind Item Wizard Manager Access,model_g2p_manual_entitlement_inkind_item_wizard,g2p_programs.g2p_program_manager,1,1,1,0
 g2p_manual_entitlement_inkind_item_wizard_validator,Manual Entitlement In-Kind Item Wizard Validator Access,model_g2p_manual_entitlement_inkind_item_wizard,g2p_programs.g2p_program_validator,1,0,0,0
+invoice_model_admin_access,Invoice Model Admin Access,model_invoice_model,base.group_system,1,1,1,1
+invoice_model_manager_access,Invoice Model Manager Access,model_invoice_model,base.group_user,1,1,1,0
+invoice_model_user_access,Invoice Model User Access,model_invoice_model,base.group_public,1,0,0,0
+
+access_visit_office_wizard,visit.office.wizard,model_visit_office_wizard,base.group_user,1,1,1,1
+access_visit_office_reason,g2p.visit.office.reason,model_g2p_visit_office_reason,base.group_user,1,1,1,1

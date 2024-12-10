@@ -1,0 +1,40 @@
+<odoo>
+<record id="g2p_visit_office_reason_inherit" model="ir.ui.view">
+    <field name="name">g2p.visit.office.reason.form</field>
+    <field name="model">g2p.visit.office.reason</field>
+    <field name="arch" type="xml">
+        <form string="Visit Office Reason">
+            <group>
+                <field name="name" widget="selection"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<!-- Wizard Form View -->
+        <record id="visit_office_wizard_form_view" model="ir.ui.view">
+            <field name="name">visit.office.wizard.form</field>
+            <field name="model">visit.office.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Select Visit Office Reasons">
+                    <group>
+                        <field name="visit_office_reason_ids" widget="many2many_tags" />
+                    </group>
+                    <footer>
+                        <button string="Confirm" type="object" name="confirm_visit_office" class="btn-primary" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<record id="action_visit_office_wizard" model="ir.actions.act_window">
+    <field name="name">Select Reasons</field>
+    <field name="res_model">visit.office.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+
+
+
+</odoo>
